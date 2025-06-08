@@ -12,6 +12,7 @@ TagManager:
   - NextLevel
   - AI
   - Checkpoints
+  - Safe
   layers:
   - Default
   - TransparentFX
