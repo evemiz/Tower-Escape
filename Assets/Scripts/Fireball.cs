@@ -17,5 +17,10 @@ public class Fireball : MonoBehaviour
             Debug.Log("Player hit by fireball!");
             Destroy(gameObject);
         }
+        if (other.CompareTag("AI"))
+        {
+            Debug.Log("Enemy hit by fireball!");
+            Destroy(gameObject);
+        }
     }
 }

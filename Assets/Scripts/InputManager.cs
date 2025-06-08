@@ -18,6 +18,9 @@ public class InputManager : MonoBehaviour
     public float horizontalInput;
     AnimatorManager animatorManager;
 
+    public bool fireInput;
+
+
     private void Awake()
     {
         animatorManager = GetComponent<AnimatorManager>();
@@ -31,6 +34,7 @@ public class InputManager : MonoBehaviour
             playerControls = new PlayerControls();
             playerControls.PlayerMovement.Movement.performed += i => movementInput = i.ReadValue<Vector2>();
             playerControls.PlayerMovement.Camera.performed += i => cameraInput = i.ReadValue<Vector2>();
+            playerControls.PlayerActions.Fire.performed += i => fireInput = true;
         }
 
         playerControls.Enable();
@@ -44,7 +48,7 @@ public class InputManager : MonoBehaviour
     public void HandleAllInputs()
     {
         HandleMovementInput();
-        //HandleActionInput
+        HandleFireInput();
     }
 
     private void HandleMovementInput()
@@ -57,5 +61,15 @@ public class InputManager : MonoBehaviour
 
         moveAmount = Mathf.Clamp01(Mathf.Abs(horizontalInput) + Mathf.Abs(verticalInput));
         animatorManager.UpdateAnimatorValues(0, moveAmount);
+    }
+
+    private void HandleFireInput()
+    {
+        if (fireInput)
+        {
+            Debug.Log("Fire input received");
+            playerLocomotion.FireProjectile(); 
+            fireInput = false;
+        }
     }
 }

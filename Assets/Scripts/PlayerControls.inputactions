@@ -206,8 +206,30 @@
         {
             "name": "Player Actions",
             "id": "06dd6575-abe0-491a-814c-b37f931b88eb",
-            "actions": [],
-            "bindings": []
+            "actions": [
+                {
+                    "name": "Fire",
+                    "type": "Button",
+                    "id": "dcd80716-f859-47f7-9a1e-ea87c5520a00",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "a75718ce-4c88-49a3-b340-1e6ff60a34cd",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Fire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []

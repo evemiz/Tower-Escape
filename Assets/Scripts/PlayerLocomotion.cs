@@ -26,6 +26,10 @@ public class PlayerLocomotion : MonoBehaviour
     public bool isClimbing = false;
     public float climbSpeed = 3f;
 
+    public GameObject projectilePrefab;
+    public Transform shootPoint;
+    public float shootForce = 700f;
+
     private void Awake()
     {
         playerManager = GetComponent<PlayerManager>();
@@ -146,7 +150,7 @@ public class PlayerLocomotion : MonoBehaviour
             }
         }
     }
-    
+
     private void TryStepUp()
     {
         RaycastHit lowerHit;
@@ -164,5 +168,20 @@ public class PlayerLocomotion : MonoBehaviour
                 playerRigidbody.position += new Vector3(0, 0.1f, 0); // דחיפה עדינה למעלה
             }
         }
+    }
+    
+    public void FireProjectile()
+    {
+        if (projectilePrefab == null || shootPoint == null) return;
+
+        GameObject projectile = GameObject.Instantiate(projectilePrefab, shootPoint.position, Quaternion.LookRotation(transform.forward));
+        Rigidbody rb = projectile.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.velocity = Vector3.zero;
+            rb.AddForce(transform.forward * shootForce, ForceMode.Impulse);
+        }
+
+        Debug.Log("Player fired fireball");
     }
 }
