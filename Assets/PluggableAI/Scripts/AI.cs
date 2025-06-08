@@ -9,6 +9,10 @@ public class AI : MonoBehaviour
     NavMeshAgent agent;
     Animator anim;
     public Transform player;
+
+    public GameObject projectilePrefab;
+    public Transform fireballSpawnPoint;
+
     State currentState;
 
     void Start()
@@ -22,4 +26,7 @@ public class AI : MonoBehaviour
     {
         currentState = currentState.Process();
     }
+
+    public GameObject GetProjectile() => projectilePrefab;
+    public Transform GetShootPoint() => fireballSpawnPoint;
 }

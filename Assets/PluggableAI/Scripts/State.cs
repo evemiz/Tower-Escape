@@ -223,7 +223,8 @@ public class Pursue : State
         {
             if (CanAttackPlayer())
             {
-                nextState = new Attack(npc, agent, anim, player);
+                AI ai = npc.GetComponent<AI>();
+                nextState = new Attack(npc, agent, anim, player, ai.GetProjectile(), ai.GetShootPoint());
                 stage = EVENT.EXIT;
             }
             else if (!CanSeePlayer())
@@ -246,10 +247,18 @@ public class Attack : State
     float rotationSpeed = 2.0f;
     // AudioSource attackSound;
 
-    public Attack(GameObject _npc, NavMeshAgent _agent, Animator _anim, Transform _player) : base(_npc, _agent, _anim, _player)
+    GameObject projectilePrefab;
+    Transform shootPoint;
+    float shootForce = 800f;
+    float shootCooldown = 1f;
+    float shootTimer = 0f;  
+
+    public Attack(GameObject _npc, NavMeshAgent _agent, Animator _anim, Transform _player, GameObject _projectilePrefab, Transform _shootPoint)
+        : base(_npc, _agent, _anim, _player)
     {
         name = STATE.ATTACK;
-        // attackSound = _npc.GetComponent<AudioSource>();
+        projectilePrefab = _projectilePrefab;
+        shootPoint = _shootPoint;
     }
 
     public override void Enter()
@@ -257,15 +266,21 @@ public class Attack : State
         anim.SetTrigger("isAttack");
         agent.isStopped = true;
         // attackSound.Play();
+        shootTimer = shootCooldown;
         base.Enter();
     }
 
     public override void Update()
     {
         Vector3 direction = player.position - npc.transform.position;
-        float angle = Vector3.Angle(direction, npc.transform.forward);
-
         npc.transform.rotation = Quaternion.Slerp(npc.transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * rotationSpeed);
+
+        shootTimer += Time.deltaTime;
+        if (shootTimer >= shootCooldown)
+        {
+            ShootAtPlayer();
+            shootTimer = 0f;
+        }
 
         if (!CanAttackPlayer())
         {
@@ -279,6 +294,18 @@ public class Attack : State
         anim.ResetTrigger("isAttack");
         // attackSound.Stop();
         base.Exit();
+    }
+
+    void ShootAtPlayer()
+    {
+        Debug.Log("Shooting fireball!");
+        GameObject projectile = GameObject.Instantiate(projectilePrefab, shootPoint.position, Quaternion.identity);
+        Rigidbody rb = projectile.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            Vector3 shootDir = (player.position - shootPoint.position).normalized;
+            rb.AddForce(shootDir * shootForce);
+        }
     }
 
 }
