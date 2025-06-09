@@ -8,11 +8,13 @@ public class HealthbarPlayer : MonoBehaviour
     public GameObject deathEffect, hitEffect;
     public float currentHealth;
     public Healthbar healthbar;
+    private PlayerManager playerManager;
 
     private void Start()
     {
         currentHealth = maxHealth;
         healthbar.UpdateHealthBar(maxHealth, currentHealth);
+        playerManager = GetComponent<PlayerManager>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -29,6 +31,10 @@ public class HealthbarPlayer : MonoBehaviour
             {
                 // Instantiate(deathEffect, transform.position, Quaternion.Euler(-90, 0, 0));
                 Destroy(gameObject);
+                if (playerManager != null)
+                {
+                    playerManager.GameOver();
+                }
             }
             else
             {

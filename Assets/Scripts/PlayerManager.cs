@@ -21,6 +21,7 @@ public class PlayerManager : MonoBehaviour
 
     public AudioClip gameOverSound;
     public float volume = 1f;
+    
 
     private void Awake()
     {
@@ -60,7 +61,7 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    void GameOver()
+    public void GameOver()
     {
         Time.timeScale = 0;
 

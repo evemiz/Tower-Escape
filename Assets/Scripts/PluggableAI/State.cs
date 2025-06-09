@@ -9,7 +9,7 @@ public class State
     // Possible states for the NPC
     public enum STATE
     {
-        IDLE, PATROL, PURSUE, ATTACK, SLEEP, RUNAWAY
+        IDLE, PATROL, PURSUE, ATTACK, SLEEP
     };
     // Stages of a state (used for transitions)
     public enum EVENT
@@ -80,17 +80,6 @@ public class State
         }
         return false;
     }
-
-    public bool IsPlayerBehind()
-    {
-        Vector3 direction = npc.transform.position - player.position;
-        float angle = Vector3.Angle(direction, npc.transform.forward);
-        if (direction.magnitude < 2 && angle < 30)
-        {
-            return true;
-        }
-        return false;
-    }
 }
 
 /// Idle state for the NPC.
@@ -116,9 +105,10 @@ public class Idle : State
             nextState = new Pursue(npc, agent, anim, player);
             stage = EVENT.EXIT;
         }
-        else if (Random.Range(0, 100) < 10) // 10% chance to transition to Patrol state
+        else if (Random.Range(0, 100) < 10)
         {
-            nextState = new Patrol(npc, agent, anim, player);
+            AI ai = npc.GetComponent<AI>();
+            nextState = new Patrol(npc, agent, anim, player, ai.checkpoints);
             stage = EVENT.EXIT;
         }
     }
@@ -134,51 +124,41 @@ public class Idle : State
 /// Patrol state for the NPC. NPC moves between checkpoints.
 public class Patrol : State
 {
-    int currentIndex = -1; // Index of the current checkpoint
+    int currentIndex = -1;
+    List<Transform> checkpoints;
 
-    /// Constructor for the Patrol state.
-    public Patrol(GameObject _npc, NavMeshAgent _agent, Animator _anim, Transform _player) : base(_npc, _agent, _anim, _player)
+    public Patrol(GameObject _npc, NavMeshAgent _agent, Animator _anim, Transform _player, List<Transform> _checkpoints)
+        : base(_npc, _agent, _anim, _player)
     {
         name = STATE.PATROL;
+        checkpoints = _checkpoints;
         agent.speed = 1;
-        agent.isStopped = false; // Ensure agent is moving
+        agent.isStopped = false;
     }
 
-    /// Called when entering the Patrol state.
     public override void Enter()
     {
         float lastDist = Mathf.Infinity;
-        for (int i = 0; i < GameEnvironment.Singleton.Checkpoints.Count; i++)
+        for (int i = 0; i < checkpoints.Count; i++)
         {
-            GameObject thisWP = GameEnvironment.Singleton.Checkpoints[i];
-            float distance = Vector3.Distance(npc.transform.position, thisWP.transform.position);
+            float distance = Vector3.Distance(npc.transform.position, checkpoints[i].position);
             if (distance < lastDist)
             {
                 currentIndex = i - 1;
                 lastDist = distance;
             }
         }
-        anim.SetTrigger("isWalking"); // Set walking animation
+
+        anim.SetTrigger("isWalking");
         base.Enter();
     }
 
-    /// Called every frame while in the Patrol state.
     public override void Update()
     {
-        // If NPC is close to the current checkpoint, move to the next one
         if (agent.remainingDistance < 1)
         {
-            // Loop back to the first checkpoint if at the end of the list
-            if (currentIndex > GameEnvironment.Singleton.Checkpoints.Count - 1)
-            {
-                currentIndex = 0;
-            }
-            else
-            {
-                currentIndex++;
-            }
-            // Set destination to the next checkpoint
-            agent.SetDestination(GameEnvironment.Singleton.Checkpoints[currentIndex].transform.position);
+            currentIndex = (currentIndex + 1) % checkpoints.Count;
+            agent.SetDestination(checkpoints[currentIndex].position);
         }
 
         if (CanSeePlayer())
@@ -186,20 +166,15 @@ public class Patrol : State
             nextState = new Pursue(npc, agent, anim, player);
             stage = EVENT.EXIT;
         }
-        else if (IsPlayerBehind())
-        {
-            nextState = new RunAway(npc, agent, anim, player);
-            stage = EVENT.EXIT;
-        }
     }
 
-    /// Called when exiting the Patrol state.
     public override void Exit()
     {
-        anim.ResetTrigger("isWalking"); // Reset walking animation trigger
+        anim.ResetTrigger("isWalking");
         base.Exit();
     }
 }
+
 
 public class Pursue : State
 {
@@ -229,7 +204,8 @@ public class Pursue : State
             }
             else if (!CanSeePlayer())
             {
-                nextState = new Patrol(npc, agent, anim, player);
+                AI ai = npc.GetComponent<AI>();
+                nextState = new Patrol(npc, agent, anim, player, ai.checkpoints);
                 stage = EVENT.EXIT;
             }
         }
@@ -308,37 +284,4 @@ public class Attack : State
         }
     }
 
-}
-
-public class RunAway : State
-{
-    GameObject safeLocation;
-    public RunAway(GameObject _npc, NavMeshAgent _agent, Animator _anim, Transform _player) : base(_npc, _agent, _anim, _player)
-    {
-        name = STATE.RUNAWAY;
-        safeLocation = GameObject.FindGameObjectWithTag("Safe");
-    }
-        public override void Enter()
-    {
-        anim.SetTrigger("isRunning");
-        agent.isStopped = false;
-        agent.speed = 6;
-        agent.SetDestination(safeLocation.transform.position);
-        base.Enter();
-    }
-
-    public override void Update()
-    {
-        if (agent.remainingDistance < 1)
-        {
-            nextState = new Idle(npc, agent, anim, player);
-            stage = EVENT.EXIT;
-        }
-    }
-
-    public override void Exit()
-    {
-        anim.ResetTrigger("isRunning");
-        base.Exit();
-    }
 }

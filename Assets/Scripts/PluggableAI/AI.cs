@@ -15,11 +15,21 @@ public class AI : MonoBehaviour
 
     State currentState;
 
+    public Transform checkpointsParent;
+    public List<Transform> checkpoints = new List<Transform>();
+
+
     void Start()
     {
-        agent = this.GetComponent<NavMeshAgent>();
-        anim = this.GetComponent<Animator>();
-        currentState = new Idle(this.gameObject, agent, anim, player);
+        agent = GetComponent<NavMeshAgent>();
+        anim = GetComponent<Animator>();
+
+        foreach (Transform child in checkpointsParent)
+        {
+            checkpoints.Add(child);
+        }
+
+        currentState = new Idle(gameObject, agent, anim, player);
     }
 
     void Update()
