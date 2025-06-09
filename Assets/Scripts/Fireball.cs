@@ -9,18 +9,4 @@ public class Fireball : MonoBehaviour
     {
         Destroy(gameObject, lifeTime);
     }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            Debug.Log("Player hit by fireball!");
-            Destroy(gameObject);
-        }
-        if (other.CompareTag("AI"))
-        {
-            Debug.Log("Enemy hit by fireball!");
-            Destroy(gameObject);
-        }
-    }
 }

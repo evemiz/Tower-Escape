@@ -19,6 +19,11 @@ public class HealthbarPlayer : MonoBehaviour
     {
         if (other.CompareTag("Fireball"))
         {
+            if (this.CompareTag("AI"))
+            {
+                GetComponent<AI>().TakeDamage();
+            }
+            
             currentHealth -= Random.Range(0.5f, 1.5f);
             if (currentHealth <= 0)
             {

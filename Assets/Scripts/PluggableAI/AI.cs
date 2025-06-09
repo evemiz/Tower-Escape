@@ -29,4 +29,12 @@ public class AI : MonoBehaviour
 
     public GameObject GetProjectile() => projectilePrefab;
     public Transform GetShootPoint() => fireballSpawnPoint;
+
+    public void TakeDamage()
+{
+    if (!(currentState is Attack))
+    {
+        currentState = new Attack(this.gameObject, agent, anim, player, GetProjectile(), GetShootPoint());
+    }
+}
 }

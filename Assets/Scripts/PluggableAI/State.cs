@@ -26,7 +26,7 @@ public class State
 
     // Vision and attack parameters
     float visDist = 10.0f; // Vision distance
-    float visAngle = 30.0f; // Vision angle
+    float visAngle = 90.0f; // Vision angle
     float shootDist = 7.0f; // Shooting distance
 
     /// Constructor for the State class.
