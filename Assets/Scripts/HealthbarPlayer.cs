@@ -25,7 +25,7 @@ public class HealthbarPlayer : MonoBehaviour
             {
                 GetComponent<AI>().TakeDamage();
             }
-            
+
             currentHealth -= Random.Range(0.5f, 1.5f);
             if (currentHealth <= 0)
             {
@@ -44,6 +44,21 @@ public class HealthbarPlayer : MonoBehaviour
             }
             Destroy(other.gameObject);
         }
+        else if (other.CompareTag("Heart") && this.CompareTag("Player"))
+        {
+            Debug.Log("other: " + other + ", this: " + this);
+            currentHealth += Random.Range(0.5f, 1.5f);
+            if (currentHealth > maxHealth)
+            {
+                currentHealth = maxHealth;
+            }
+            else
+            {
+                healthbar.UpdateHealthBar(maxHealth, currentHealth);
+                Destroy(other.gameObject);
+            }
+        }
+
     }
 
 }
