@@ -26,7 +26,7 @@ public class HealthbarPlayer : MonoBehaviour
                 GetComponent<AI>().TakeDamage();
             }
 
-            currentHealth -= Random.Range(0.5f, 1.5f);
+            currentHealth--;
             if (currentHealth <= 0)
             {
                 // Instantiate(deathEffect, transform.position, Quaternion.Euler(-90, 0, 0));
@@ -47,10 +47,16 @@ public class HealthbarPlayer : MonoBehaviour
         else if (other.CompareTag("Heart") && this.CompareTag("Player"))
         {
             Debug.Log("other: " + other + ", this: " + this);
-            currentHealth += Random.Range(0.5f, 1.5f);
+            currentHealth++;
             if (currentHealth > maxHealth)
             {
                 currentHealth = maxHealth;
+                Transform canvas = other.transform.Find("Canvas");
+                if (canvas != null)
+                {
+                    canvas.gameObject.SetActive(true);
+                    StartCoroutine(HideFloatingTextAfterDelay(canvas.gameObject, 2f));
+                }
             }
             else
             {
@@ -59,6 +65,13 @@ public class HealthbarPlayer : MonoBehaviour
             }
         }
 
+    }
+
+    private IEnumerator HideFloatingTextAfterDelay(GameObject textObject, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (textObject != null)
+            textObject.SetActive(false);
     }
 
 }
