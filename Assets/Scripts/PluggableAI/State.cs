@@ -9,7 +9,7 @@ public class State
     // Possible states for the NPC
     public enum STATE
     {
-        IDLE, PATROL, PURSUE, ATTACK, SLEEP
+        IDLE, PATROL, PURSUE, ATTACK
     };
     // Stages of a state (used for transitions)
     public enum EVENT
