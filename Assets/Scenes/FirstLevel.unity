@@ -450,8 +450,8 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1491610106}
   - {fileID: 1172947411}
+  - {fileID: 1491610106}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -11413,6 +11413,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 845905830}
+  - component: {fileID: 845905831}
   m_Layer: 0
   m_Name: Enemies
   m_TagString: Untagged
@@ -11440,6 +11441,20 @@ Transform:
   - {fileID: 1334639682}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &845905831
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 845905829}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30b907f11a30341c7998f7ae070ab873, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemiesParent: {fileID: 845905830}
+  enemyCountText: {fileID: 1626654012}
 --- !u!1001 &846144878
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17341,7 +17356,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 121.3, y: -15}
+  m_AnchoredPosition: {x: 15, y: -15}
   m_SizeDelta: {x: 100, y: 52.4809}
   m_Pivot: {x: 0, y: 1}
 --- !u!4 &1176388337 stripped
@@ -22287,7 +22302,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1491610106
 RectTransform:
   m_ObjectHideFlags: 0
@@ -22307,7 +22322,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 15, y: -15}
+  m_AnchoredPosition: {x: 274.8, y: -15}
   m_SizeDelta: {x: 100, y: 52.4809}
   m_Pivot: {x: 0, y: 1}
 --- !u!4 &1493065724 stripped

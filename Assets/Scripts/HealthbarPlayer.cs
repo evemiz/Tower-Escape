@@ -29,8 +29,13 @@ public class HealthbarPlayer : MonoBehaviour
             currentHealth--;
             if (currentHealth <= 0)
             {
-                // Instantiate(deathEffect, transform.position, Quaternion.Euler(-90, 0, 0));
                 Destroy(gameObject);
+                
+                if (this.CompareTag("AI"))
+                {
+                    EnemyCounterUI.Instance.UpdateEnemyCount();
+                }
+
                 if (playerManager != null)
                 {
                     playerManager.GameOver();
@@ -38,7 +43,6 @@ public class HealthbarPlayer : MonoBehaviour
             }
             else
             {
-                // Instantiate(hitEffect, transform.position, Quaternion.identity);
                 healthbar.UpdateHealthBar(maxHealth, currentHealth);
                 Debug.Log("Hit");
             }

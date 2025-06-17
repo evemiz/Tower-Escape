@@ -30,6 +30,9 @@ public class PlayerLocomotion : MonoBehaviour
     public Transform shootPoint;
     public float shootForce = 700f;
 
+    public AudioClip fireSoundClip;
+
+
     private void Awake()
     {
         playerManager = GetComponent<PlayerManager>();
@@ -164,8 +167,7 @@ public class PlayerLocomotion : MonoBehaviour
             Vector3 upperOrigin = transform.position + Vector3.up * 0.5f;
             if (!Physics.Raycast(upperOrigin, forward, out upperHit, 0.5f))
             {
-                // יש מדרגה שאפשר לטפס עליה
-                playerRigidbody.position += new Vector3(0, 0.1f, 0); // דחיפה עדינה למעלה
+                playerRigidbody.position += new Vector3(0, 0.1f, 0);
             }
         }
     }
@@ -180,6 +182,11 @@ public class PlayerLocomotion : MonoBehaviour
         {
             rb.velocity = Vector3.zero;
             rb.AddForce(transform.forward * shootForce, ForceMode.Impulse);
+        }
+
+        if (fireSoundClip != null)
+        {
+            AudioSource.PlayClipAtPoint(fireSoundClip, Camera.main.transform.position);
         }
 
         Debug.Log("Player fired fireball");
