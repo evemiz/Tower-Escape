@@ -33,7 +33,7 @@ public class HealthbarPlayer : MonoBehaviour
                 
                 if (this.CompareTag("AI"))
                 {
-                    EnemyCounterUI.Instance.UpdateEnemyCount();
+                    GameManager.Instance.UpdateEnemyCount();
                 }
 
                 if (playerManager != null)

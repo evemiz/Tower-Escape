@@ -1,20 +1,19 @@
 using UnityEngine;
 using TMPro;
 
-public class EnemyCounterUI : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
-    public static EnemyCounterUI Instance;
+    public static GameManager Instance;
 
     public GameObject enemiesParent1Prefab;
     public GameObject enemiesParent2Prefab;
     public GameObject enemiesParent3Prefab;
     public GameObject playerPrefab;
 
-    public Transform enemiesContainer;
-
     private Transform currentenemiesParent;
     public int level;
     public TextMeshProUGUI enemyCountText;
+    public TextMeshProUGUI levelText;
 
     int count;
 
@@ -26,6 +25,7 @@ public class EnemyCounterUI : MonoBehaviour
     private void Start()
     {
         level = 1;
+        levelText.text = "Level: 1";
         NextLevel();
         Count();
     }
@@ -40,11 +40,13 @@ public class EnemyCounterUI : MonoBehaviour
             if (level == 1)
             {
                 level = 2;
+                levelText.text = "Level: 2";
                 NextLevel();
             }
             else if (level == 2)
             {
                 level = 3;
+                levelText.text = "Level: 3";
                 NextLevel();
             }
             else
@@ -84,21 +86,21 @@ public class EnemyCounterUI : MonoBehaviour
                 camManager.SetTarget(playerTransform, inputManager);
             }
 
-            GameObject newEnemies = Instantiate(enemiesParent1Prefab, enemiesContainer);
+            GameObject newEnemies = Instantiate(enemiesParent1Prefab);
             currentenemiesParent = newEnemies.transform;
             AssignPlayerToAllEnemies(playerTransform);
             Count();
         }
         if (level == 2)
         {
-            GameObject newEnemies = Instantiate(enemiesParent2Prefab, enemiesContainer);
+            GameObject newEnemies = Instantiate(enemiesParent2Prefab);
             currentenemiesParent = newEnemies.transform;
             AssignPlayerToAllEnemies(GameObject.FindWithTag("Player").transform);
             Count();
         }
         else if (level == 3)
         {
-            GameObject newEnemies = Instantiate(enemiesParent3Prefab, enemiesContainer);
+            GameObject newEnemies = Instantiate(enemiesParent3Prefab);
             currentenemiesParent = newEnemies.transform;
             AssignPlayerToAllEnemies(GameObject.FindWithTag("Player").transform);
             Count();
