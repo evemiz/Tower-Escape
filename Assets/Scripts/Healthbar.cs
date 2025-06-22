@@ -8,7 +8,24 @@ public class Healthbar : MonoBehaviour
     public Image healthbarSprite;
     public float reduceSpeed = 2;
     public float target = 1;
-    public Camera cam;
+    private Camera cam;
+
+    private void Awake()
+    {
+        if (cam == null)
+        {
+            GameObject camObj = GameObject.FindWithTag("MainCamera");
+            if (camObj != null)
+            {
+                cam = camObj.GetComponent<Camera>();
+                Debug.Log("✅ Healthbar: Found camera with tag 'MainCamera': " + cam.name);
+            }
+            else
+            {
+                Debug.LogWarning("⚠️ Healthbar: No camera found with tag 'MainCamera'");
+            }
+        }
+    }
 
     public void UpdateHealthBar(float maxHealth, float currentHealth)
     {

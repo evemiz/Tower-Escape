@@ -20,7 +20,7 @@ public class State
     protected EVENT stage; // Current stage in the state
     protected GameObject npc; // Reference to the NPC GameObject
     protected Animator anim; // Reference to the NPC's Animator
-    protected Transform player; // Reference to the player Transform
+    public Transform player; // Reference to the player Transform
     protected State nextState; // Next state to transition to
     protected NavMeshAgent agent; // Reference to the NPC's NavMeshAgent
 

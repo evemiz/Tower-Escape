@@ -8,7 +8,7 @@ public class AI : MonoBehaviour
 {
     NavMeshAgent agent;
     Animator anim;
-    public Transform player;
+    private Transform player;
 
     public GameObject projectilePrefab;
     public Transform fireballSpawnPoint;
@@ -41,10 +41,21 @@ public class AI : MonoBehaviour
     public Transform GetShootPoint() => fireballSpawnPoint;
 
     public void TakeDamage()
-{
-    if (!(currentState is Attack))
     {
-        currentState = new Attack(this.gameObject, agent, anim, player, GetProjectile(), GetShootPoint());
+        if (!(currentState is Attack))
+        {
+            currentState = new Attack(this.gameObject, agent, anim, player, GetProjectile(), GetShootPoint());
+        }
     }
-}
+
+    public void SetPlayer(Transform playerTransform)
+    {
+        player = playerTransform;
+
+        if (currentState != null)
+        {
+            currentState.player = playerTransform;
+        }
+    }
+
 }

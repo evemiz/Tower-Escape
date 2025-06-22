@@ -5,7 +5,15 @@ public class EnemyCounterUI : MonoBehaviour
 {
     public static EnemyCounterUI Instance;
 
-    public Transform enemiesParent;
+    public GameObject enemiesParent1Prefab;
+    public GameObject enemiesParent2Prefab;
+    public GameObject enemiesParent3Prefab;
+    public GameObject playerPrefab;
+
+    public Transform enemiesContainer;
+
+    private Transform currentenemiesParent;
+    public int level;
     public TextMeshProUGUI enemyCountText;
 
     int count;
@@ -17,19 +25,40 @@ public class EnemyCounterUI : MonoBehaviour
 
     private void Start()
     {
+        level = 1;
+        NextLevel();
         Count();
     }
 
     public void UpdateEnemyCount()
     {
-        count--;
+        count -= 1;
         enemyCountText.text = "Enemies Left: " + count;
+
+        if (count == 0)
+        {
+            if (level == 1)
+            {
+                level = 2;
+                NextLevel();
+            }
+            else if (level == 2)
+            {
+                level = 3;
+                NextLevel();
+            }
+            else
+            {
+                // the player win ! 
+                Debug.Log("You Win! --> from script EnemyCounterUI");
+            }
+        }
     }
 
     public void Count()
     {
         count = 0;
-        foreach (Transform child in enemiesParent)
+        foreach (Transform child in currentenemiesParent)
         {
             if (child != null && child.gameObject.activeInHierarchy)
             {
@@ -40,5 +69,51 @@ public class EnemyCounterUI : MonoBehaviour
         enemyCountText.text = "Enemies Left: " + count;
     }
 
+    public void NextLevel()
+    {
+        if (level == 1)
+        {
+            GameObject newPlayer = Instantiate(playerPrefab);
+            Transform playerTransform = newPlayer.transform;
+            InputManager inputManager = newPlayer.GetComponent<InputManager>();
+
+            // עדכון למצלמה
+            CameraManager camManager = FindObjectOfType<CameraManager>();
+            if (camManager != null)
+            {
+                camManager.SetTarget(playerTransform, inputManager);
+            }
+
+            GameObject newEnemies = Instantiate(enemiesParent1Prefab, enemiesContainer);
+            currentenemiesParent = newEnemies.transform;
+            AssignPlayerToAllEnemies(playerTransform);
+            Count();
+        }
+        if (level == 2)
+        {
+            GameObject newEnemies = Instantiate(enemiesParent2Prefab, enemiesContainer);
+            currentenemiesParent = newEnemies.transform;
+            AssignPlayerToAllEnemies(GameObject.FindWithTag("Player").transform);
+            Count();
+        }
+        else if (level == 3)
+        {
+            GameObject newEnemies = Instantiate(enemiesParent3Prefab, enemiesContainer);
+            currentenemiesParent = newEnemies.transform;
+            AssignPlayerToAllEnemies(GameObject.FindWithTag("Player").transform);
+            Count();
+        }
+    }
+
+    public void AssignPlayerToAllEnemies(Transform playerTransform)
+    {
+        if (currentenemiesParent == null) return;
+
+        AI[] aiEnemies = currentenemiesParent.GetComponentsInChildren<AI>();
+        foreach (AI ai in aiEnemies)
+        {
+            ai.SetPlayer(playerTransform);
+        }
+    }
 
 }

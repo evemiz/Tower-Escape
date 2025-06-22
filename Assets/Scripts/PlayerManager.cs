@@ -10,7 +10,8 @@ public class PlayerManager : MonoBehaviour
     InputManager inputManager;
     CameraManager cameraManager;
     PlayerLocomotion playerLocomotion;
-    public GameObject gameOverCanvas;
+    public GameObject gameOverCanvasPrefab;
+
 
     private bool isLoadingNextLevel = false;
 
@@ -53,6 +54,7 @@ public class PlayerManager : MonoBehaviour
     {
         if (other.CompareTag("Ocean"))
         {
+            
             GameOver();
         }
         if (other.CompareTag("NextLevel"))
@@ -73,9 +75,9 @@ public class PlayerManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
-        if (gameOverCanvas != null)
+        if (gameOverCanvasPrefab != null)
         {
-            gameOverCanvas.SetActive(true);
+            Instantiate(gameOverCanvasPrefab);
         }
 
         if (gameOverSound != null)

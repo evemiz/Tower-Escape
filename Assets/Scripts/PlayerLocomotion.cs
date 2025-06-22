@@ -8,7 +8,7 @@ public class PlayerLocomotion : MonoBehaviour
     AnimatorManager animatorManager;
     public InputManager inputManager;
     public Vector3 moveDirection;
-    public Transform cameraObject;
+    private Transform cameraObject;
     Rigidbody playerRigidbody;
 
     public bool isGrounded;
@@ -39,6 +39,23 @@ public class PlayerLocomotion : MonoBehaviour
         animatorManager = GetComponent<AnimatorManager>();
         inputManager = GetComponent<InputManager>();
         playerRigidbody = GetComponent<Rigidbody>();
+    }
+
+    void Start()
+    {
+        if (cameraObject == null)
+        {
+            GameObject cam = GameObject.FindWithTag("MainCamera");
+            if (cam != null)
+            {
+                cameraObject = cam.transform;
+                Debug.Log("✅ cameraObject set to: " + cameraObject.name);
+            }
+            else
+            {
+                Debug.LogWarning("⚠️ No object with tag 'MainCamera' found!");
+            }
+        }
     }
 
     public void HandleAllMovement()

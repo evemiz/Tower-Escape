@@ -7,7 +7,7 @@ public class CameraManager : MonoBehaviour
     public bool isCameraLocked = false;
     InputManager inputManager;
 
-    public Transform targetTransform;   // The object the camera will follow
+    Transform targetTransform;   // The object the camera will follow
     public Transform cameraPivot;       // The object the camera uses to pivot (Look up and down)
     public Transform cameraTransform;   // The transform of the actual camera object in the scene
     public LayerMask collisionLayers;   // The layers we want our camera to collide with
@@ -30,40 +30,64 @@ public class CameraManager : MonoBehaviour
 
     private void Awake()
     {
-        inputManager = FindObjectOfType<InputManager>();
-        targetTransform = FindObjectOfType<PlayerManager>().transform;
         defaultPosition = cameraTransform.localPosition.z;
-
         lookAngle = transform.eulerAngles.y;
         pivotAngle = cameraPivot.localEulerAngles.x;
-
     }
+
+    private void Start()
+    {
+        StartCoroutine(WaitForPlayer());
+    }
+
+    private IEnumerator WaitForPlayer()
+    {
+        while (targetTransform == null || inputManager == null)
+        {
+            GameObject player = GameObject.FindWithTag("Player");
+            if (player != null)
+            {
+                targetTransform = player.transform;
+                inputManager = player.GetComponent<InputManager>();
+            }
+
+            yield return null; // מחכה לפריים הבא
+        }
+
+        Debug.Log("✅ CameraManager: Player and InputManager set.");
+    }
+
 
     public void HandleAllCameraMovement()
     {
         if (isCameraLocked)
             return;
-            
+
         FollowTarget();
         RotateCamera();
         HandleCameraCollisions();
     }
-    
+
     private void FollowTarget()
     {
+        if (targetTransform == null) return;
+
         Vector3 targetPosition = Vector3.SmoothDamp
             (transform.position, targetTransform.position, ref cameraFollowVelocity, cameraFollowSpeed);
 
         transform.position = targetPosition;
     }
 
+
     private void RotateCamera()
     {
+        if (inputManager == null) return;
+
         Vector3 rotation;
         Quaternion targetRotation;
 
-        lookAngle = lookAngle + (inputManager.cameraInputX * cameraLookSpeed);
-        pivotAngle = pivotAngle + (inputManager.cameraInputY * cameraPivotSpeed);
+        lookAngle += inputManager.cameraInputX * cameraLookSpeed;
+        pivotAngle += inputManager.cameraInputY * cameraPivotSpeed;
         pivotAngle = Mathf.Clamp(pivotAngle, minimumPivotAngle, maximumPivotAngle);
 
         rotation = Vector3.zero;
@@ -76,22 +100,6 @@ public class CameraManager : MonoBehaviour
         targetRotation = Quaternion.Euler(rotation);
         cameraPivot.localRotation = targetRotation;
     }
-
-    // private void RotateCamera()
-    // {
-    //     Vector3 direction = targetTransform.forward;
-    //     if (direction.sqrMagnitude < 0.001f) return;
-
-    //     direction.y = 0;
-    //     if (direction == Vector3.zero) direction = transform.forward;
-
-    //     Quaternion targetRotation = Quaternion.LookRotation(direction);
-    //     transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * cameraLookSpeed);
-
-    //     // הפיבוט מאופס כך שהמצלמה תמיד בגובה אחיד ולא נוטה למעלה/למטה
-    //     cameraPivot.localRotation = Quaternion.identity;
-    // }
-    
 
     private void HandleCameraCollisions()
     {
@@ -114,5 +122,12 @@ public class CameraManager : MonoBehaviour
 
         cameraVectorPosition.z = Mathf.Lerp(cameraTransform.localPosition.z, targetPosiotion, 0.2f);
         cameraTransform.localPosition = cameraVectorPosition;
+    }
+    
+
+    public void SetTarget(Transform target, InputManager input)
+    {
+        targetTransform = target;
+        inputManager = input;
     }
 }
