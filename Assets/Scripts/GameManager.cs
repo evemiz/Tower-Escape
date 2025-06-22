@@ -6,6 +6,9 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    CameraManager camManager;
+
+
     public GameObject enemiesParent1Prefab;
     public GameObject enemiesParent2Prefab;
     public GameObject enemiesParent3Prefab;
@@ -26,12 +29,17 @@ public class GameManager : MonoBehaviour
 
     public CanvasGroup levelTransitionGroup;
 
+    public GameObject winCanvasPrefab;
+    public AudioClip winSound;
+    public float volume = 1f;
+
 
     int count;
 
     private void Awake()
     {
         Instance = this;
+        camManager = FindObjectOfType<CameraManager>();
     }
 
     private void Start()
@@ -63,7 +71,7 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("You Win! --> from script EnemyCounterUI");
+                Win();
             }
         }
     }
@@ -94,7 +102,6 @@ public class GameManager : MonoBehaviour
             playerTransform = newPlayer.transform;
             InputManager inputManager = newPlayer.GetComponent<InputManager>();
 
-            CameraManager camManager = FindObjectOfType<CameraManager>();
             if (camManager != null)
             {
                 camManager.SetTarget(playerTransform, inputManager);
@@ -155,6 +162,11 @@ public class GameManager : MonoBehaviour
         {
             Time.timeScale = 0f;
 
+            if (camManager != null)
+            {
+                camManager.isCameraLocked = true;
+            }
+
             levelTransitionText.text = message;
             levelTransitionPanel.SetActive(true);
 
@@ -173,18 +185,22 @@ public class GameManager : MonoBehaviour
             levelTransitionPanel.SetActive(false);
 
             yield return new WaitForSecondsRealtime(0.5f);
+            if (camManager != null)
+            {
+                camManager.isCameraLocked = false;
+            }
             Time.timeScale = 1f;
         }
     }
 
     private IEnumerator SlideInAndOut(RectTransform panel, float duration, float waitTime)
     {
-        Vector2 startPos = new Vector2(-Screen.width, 0); 
+        Vector2 startPos = new Vector2(-Screen.width, 0);
         Vector2 centerPos = Vector2.zero;
-        Vector2 endPos = new Vector2(Screen.width, 0); 
+        Vector2 endPos = new Vector2(Screen.width, 0);
 
         panel.anchoredPosition = startPos;
-        yield return null; 
+        yield return null;
 
         float elapsed = 0f;
 
@@ -206,6 +222,29 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
         panel.anchoredPosition = endPos;
+    }
+    
+    public void Win()
+    {
+        Time.timeScale = 0;
+
+        if (camManager != null)
+        {
+            camManager.isCameraLocked = true;
+        }
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        if (winCanvasPrefab != null)
+        {
+            Instantiate(winCanvasPrefab);
+        }
+
+        if (winSound != null)
+        {
+            AudioSource.PlayClipAtPoint(winSound, transform.position, volume);
+        }
     }
 
 }
