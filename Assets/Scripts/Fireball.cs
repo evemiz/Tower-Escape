@@ -20,4 +20,14 @@ public class Fireball : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    private void OnTriggerEnter(Collider other)
+{
+    if (other.CompareTag("Player") || other.CompareTag("AI"))
+    {
+        return;
+    }
+
+    Destroy(gameObject);
+}
 }
