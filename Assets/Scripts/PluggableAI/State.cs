@@ -138,6 +138,13 @@ public class Patrol : State
 
     public override void Enter()
     {
+        if (checkpoints == null || checkpoints.Count == 0)
+        {
+            anim.SetTrigger("isIdle");
+            base.Enter();
+            return;
+        }
+
         float lastDist = Mathf.Infinity;
         for (int i = 0; i < checkpoints.Count; i++)
         {
@@ -155,6 +162,16 @@ public class Patrol : State
 
     public override void Update()
     {
+        if (checkpoints == null || checkpoints.Count == 0)
+        {
+            if (CanSeePlayer())
+            {
+                nextState = new Pursue(npc, agent, anim, player);
+                stage = EVENT.EXIT;
+            }
+            return;
+        }
+
         if (agent.remainingDistance < 1)
         {
             currentIndex = (currentIndex + 1) % checkpoints.Count;
@@ -171,6 +188,7 @@ public class Patrol : State
     public override void Exit()
     {
         anim.ResetTrigger("isWalking");
+        anim.ResetTrigger("isIdle");
         base.Exit();
     }
 }

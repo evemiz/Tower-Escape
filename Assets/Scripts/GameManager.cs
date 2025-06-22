@@ -9,8 +9,13 @@ public class GameManager : MonoBehaviour
     public GameObject enemiesParent2Prefab;
     public GameObject enemiesParent3Prefab;
     public GameObject playerPrefab;
+    public GameObject heartsParent1Prefab;
+    public GameObject heartsParent2Prefab;
+    public GameObject heartsParent3Prefab;
 
     private Transform currentenemiesParent;
+    private Transform currentheartsParent;
+
     public int level;
     public TextMeshProUGUI enemyCountText;
     public TextMeshProUGUI levelText;
@@ -51,7 +56,6 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                // the player win ! 
                 Debug.Log("You Win! --> from script EnemyCounterUI");
             }
         }
@@ -79,7 +83,6 @@ public class GameManager : MonoBehaviour
             Transform playerTransform = newPlayer.transform;
             InputManager inputManager = newPlayer.GetComponent<InputManager>();
 
-            // עדכון למצלמה
             CameraManager camManager = FindObjectOfType<CameraManager>();
             if (camManager != null)
             {
@@ -88,6 +91,10 @@ public class GameManager : MonoBehaviour
 
             GameObject newEnemies = Instantiate(enemiesParent1Prefab);
             currentenemiesParent = newEnemies.transform;
+
+            GameObject newHearts = Instantiate(heartsParent1Prefab);
+            currentheartsParent = newHearts.transform;
+
             AssignPlayerToAllEnemies(playerTransform);
             Count();
         }
@@ -95,6 +102,11 @@ public class GameManager : MonoBehaviour
         {
             GameObject newEnemies = Instantiate(enemiesParent2Prefab);
             currentenemiesParent = newEnemies.transform;
+
+            GameObject newHearts = Instantiate(heartsParent2Prefab);
+            currentheartsParent = newHearts.transform;
+
+
             AssignPlayerToAllEnemies(GameObject.FindWithTag("Player").transform);
             Count();
         }
@@ -102,6 +114,10 @@ public class GameManager : MonoBehaviour
         {
             GameObject newEnemies = Instantiate(enemiesParent3Prefab);
             currentenemiesParent = newEnemies.transform;
+
+            GameObject newHearts = Instantiate(heartsParent3Prefab);
+            currentheartsParent = newHearts.transform;
+
             AssignPlayerToAllEnemies(GameObject.FindWithTag("Player").transform);
             Count();
         }
