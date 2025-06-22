@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -19,6 +20,12 @@ public class GameManager : MonoBehaviour
     public int level;
     public TextMeshProUGUI enemyCountText;
     public TextMeshProUGUI levelText;
+
+    public GameObject levelTransitionPanel;
+    public TextMeshProUGUI levelTransitionText;
+
+    public CanvasGroup levelTransitionGroup;
+
 
     int count;
 
@@ -77,8 +84,10 @@ public class GameManager : MonoBehaviour
 
     public void NextLevel()
     {
+
         if (level == 1)
         {
+            StartCoroutine(ShowLevelTransition("Get Ready! Level 1 is starting..."));
             GameObject newPlayer = Instantiate(playerPrefab);
             Transform playerTransform = newPlayer.transform;
             InputManager inputManager = newPlayer.GetComponent<InputManager>();
@@ -100,6 +109,7 @@ public class GameManager : MonoBehaviour
         }
         if (level == 2)
         {
+            StartCoroutine(ShowLevelTransition("Great job! Level 2 is starting..."));
             GameObject newEnemies = Instantiate(enemiesParent2Prefab);
             currentenemiesParent = newEnemies.transform;
 
@@ -112,6 +122,7 @@ public class GameManager : MonoBehaviour
         }
         else if (level == 3)
         {
+            StartCoroutine(ShowLevelTransition("Final Stage! Level 3 begins now. Give it your all!"));
             GameObject newEnemies = Instantiate(enemiesParent3Prefab);
             currentenemiesParent = newEnemies.transform;
 
@@ -132,6 +143,64 @@ public class GameManager : MonoBehaviour
         {
             ai.SetPlayer(playerTransform);
         }
+    }
+    private IEnumerator ShowLevelTransition(string message)
+    {
+        if (levelTransitionPanel != null && levelTransitionText != null)
+        {
+            Time.timeScale = 0f;
+
+            levelTransitionText.text = message;
+            levelTransitionPanel.SetActive(true);
+
+            RectTransform panelRect = levelTransitionPanel.GetComponent<RectTransform>();
+
+            if (level == 1)
+            {
+                panelRect.anchoredPosition = new Vector2(-Screen.width, 0);
+                yield return new WaitForSecondsRealtime(1f);
+            }
+
+            panelRect.anchoredPosition = new Vector2(-Screen.width, 0);
+
+            yield return StartCoroutine(SlideInAndOut(panelRect, 0.5f, 2f));
+
+            levelTransitionPanel.SetActive(false);
+
+            yield return new WaitForSecondsRealtime(0.5f);
+            Time.timeScale = 1f;
+        }
+    }
+
+    private IEnumerator SlideInAndOut(RectTransform panel, float duration, float waitTime)
+    {
+        Vector2 startPos = new Vector2(-Screen.width, 0); 
+        Vector2 centerPos = Vector2.zero;
+        Vector2 endPos = new Vector2(Screen.width, 0); 
+
+        panel.anchoredPosition = startPos;
+        yield return null; 
+
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            panel.anchoredPosition = Vector2.Lerp(startPos, centerPos, elapsed / duration);
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+        panel.anchoredPosition = centerPos;
+
+        yield return new WaitForSecondsRealtime(waitTime);
+
+        elapsed = 0f;
+        while (elapsed < duration)
+        {
+            panel.anchoredPosition = Vector2.Lerp(centerPos, endPos, elapsed / duration);
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+        panel.anchoredPosition = endPos;
     }
 
 }
