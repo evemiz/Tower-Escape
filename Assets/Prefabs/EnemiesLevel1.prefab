@@ -1687,7 +1687,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62ce3c754ab1442b18af0d9ab4f227e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 6917176054786244764, guid: d67e971df3659451bae6d0e391aeffc8, type: 3}
   projectilePrefab: {fileID: 3896021354733185502, guid: bfb82ffe8e7804073a4ecea2976a6a98, type: 3}
   fireballSpawnPoint: {fileID: 7669823332836666861}
   checkpointsParent: {fileID: 1674316614146284072, guid: 7c6f72dafa9f4402bbb71527ffd8655a, type: 3}
@@ -1888,10 +1887,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62ce3c754ab1442b18af0d9ab4f227e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 6917176054786244764, guid: d67e971df3659451bae6d0e391aeffc8, type: 3}
   projectilePrefab: {fileID: 3896021354733185502, guid: bfb82ffe8e7804073a4ecea2976a6a98, type: 3}
   fireballSpawnPoint: {fileID: 8326577958604257339}
-  checkpointsParent: {fileID: 6064126918460866060, guid: bb492a08b1034450787aa7b19b9c3f51, type: 3}
+  checkpointsParent: {fileID: 0}
   checkpoints: []
 --- !u!65 &6246425390594449994
 BoxCollider:
@@ -2087,7 +2085,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62ce3c754ab1442b18af0d9ab4f227e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 6917176054786244764, guid: d67e971df3659451bae6d0e391aeffc8, type: 3}
   projectilePrefab: {fileID: 3896021354733185502, guid: bfb82ffe8e7804073a4ecea2976a6a98, type: 3}
   fireballSpawnPoint: {fileID: 5462215910702758169}
   checkpointsParent: {fileID: 3568084674793443603, guid: 1d2aed09745a1472fa571a663e372ffc, type: 3}
@@ -2281,7 +2278,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62ce3c754ab1442b18af0d9ab4f227e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 6917176054786244764, guid: d67e971df3659451bae6d0e391aeffc8, type: 3}
   projectilePrefab: {fileID: 3896021354733185502, guid: bfb82ffe8e7804073a4ecea2976a6a98, type: 3}
   fireballSpawnPoint: {fileID: 4970237660161844583}
   checkpointsParent: {fileID: 7596868186776399947, guid: abde3628826c3425bb09b53b9e81a5f4, type: 3}
@@ -2475,7 +2471,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62ce3c754ab1442b18af0d9ab4f227e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 6917176054786244764, guid: d67e971df3659451bae6d0e391aeffc8, type: 3}
   projectilePrefab: {fileID: 3896021354733185502, guid: bfb82ffe8e7804073a4ecea2976a6a98, type: 3}
   fireballSpawnPoint: {fileID: 1556209506999349223}
   checkpointsParent: {fileID: 2890840679064599798, guid: 611f3bef794584cfdbcc88d567f2ef59, type: 3}

@@ -9,7 +9,7 @@ public class State
     // Possible states for the NPC
     public enum STATE
     {
-        IDLE, PATROL, PURSUE, ATTACK
+        IDLE, PATROL, PURSUE, ATTACK, LOOKING
     };
     // Stages of a state (used for transitions)
     public enum EVENT
@@ -26,7 +26,7 @@ public class State
 
     // Vision and attack parameters
     float visDist = 10.0f; // Vision distance
-    float visAngle = 90.0f; // Vision angle
+    float visAngle = 130.0f; // Vision angle
     float shootDist = 7.0f; // Shooting distance
 
     /// Constructor for the State class.
@@ -62,6 +62,8 @@ public class State
     {
         Vector3 direction = player.position - npc.transform.position;
         float angle = Vector3.Angle(direction, npc.transform.forward);
+
+        Debug.DrawLine(npc.transform.position, player.position, Color.red); // קו בדיבאג
 
         if (direction.magnitude < visDist && angle < visAngle)
         {
@@ -100,6 +102,7 @@ public class Idle : State
     /// Called every frame while in the Idle state.
     public override void Update()
     {
+
         if (CanSeePlayer())
         {
             nextState = new Pursue(npc, agent, anim, player);
@@ -108,7 +111,14 @@ public class Idle : State
         else if (Random.Range(0, 100) < 10)
         {
             AI ai = npc.GetComponent<AI>();
-            nextState = new Patrol(npc, agent, anim, player, ai.checkpoints);
+            if (ai.checkpoints == null || ai.checkpoints.Count == 0)
+            {
+                nextState = new Looking(npc, agent, anim, player); // חדש
+            }
+            else
+            {
+                nextState = new Patrol(npc, agent, anim, player, ai.checkpoints);
+            }
             stage = EVENT.EXIT;
         }
     }
@@ -117,6 +127,38 @@ public class Idle : State
     public override void Exit()
     {
         anim.ResetTrigger("isIdle"); // Reset idle animation trigger
+        base.Exit();
+    }
+}
+
+public class Looking : State
+{
+    public Looking(GameObject _npc, NavMeshAgent _agent, Animator _anim, Transform _player)
+        : base(_npc, _agent, _anim, _player)
+    {
+        name = STATE.LOOKING;
+        agent.isStopped = true;
+    }
+
+    public override void Enter()
+    {
+        Debug.Log("Entering LOOKING state");
+        anim.SetTrigger("isIdle");
+        base.Enter();
+    }
+
+    public override void Update()
+    {
+        if (CanSeePlayer())
+        {
+            nextState = new Pursue(npc, agent, anim, player);
+            stage = EVENT.EXIT;
+        }
+    }
+
+    public override void Exit()
+    {
+        anim.ResetTrigger("isIdle");
         base.Exit();
     }
 }
@@ -140,8 +182,9 @@ public class Patrol : State
     {
         if (checkpoints == null || checkpoints.Count == 0)
         {
-            anim.SetTrigger("isIdle");
-            base.Enter();
+            // אם אין נקודות, תעברי ישר למצב IDLE
+            nextState = new Idle(npc, agent, anim, player);
+            stage = EVENT.EXIT;
             return;
         }
 
@@ -162,16 +205,6 @@ public class Patrol : State
 
     public override void Update()
     {
-        if (checkpoints == null || checkpoints.Count == 0)
-        {
-            if (CanSeePlayer())
-            {
-                nextState = new Pursue(npc, agent, anim, player);
-                stage = EVENT.EXIT;
-            }
-            return;
-        }
-
         if (agent.remainingDistance < 1)
         {
             currentIndex = (currentIndex + 1) % checkpoints.Count;
@@ -292,7 +325,6 @@ public class Attack : State
 
     void ShootAtPlayer()
     {
-        Debug.Log("Shooting fireball!");
         GameObject projectile = GameObject.Instantiate(projectilePrefab, shootPoint.position, Quaternion.identity);
         Rigidbody rb = projectile.GetComponent<Rigidbody>();
         if (rb != null)

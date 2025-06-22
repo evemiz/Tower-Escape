@@ -84,12 +84,14 @@ public class GameManager : MonoBehaviour
 
     public void NextLevel()
     {
+        Transform playerTransform = null;
 
         if (level == 1)
         {
             StartCoroutine(ShowLevelTransition("Get Ready! Level 1 is starting..."));
+
             GameObject newPlayer = Instantiate(playerPrefab);
-            Transform playerTransform = newPlayer.transform;
+            playerTransform = newPlayer.transform;
             InputManager inputManager = newPlayer.GetComponent<InputManager>();
 
             CameraManager camManager = FindObjectOfType<CameraManager>();
@@ -103,35 +105,38 @@ public class GameManager : MonoBehaviour
 
             GameObject newHearts = Instantiate(heartsParent1Prefab);
             currentheartsParent = newHearts.transform;
-
-            AssignPlayerToAllEnemies(playerTransform);
-            Count();
         }
-        if (level == 2)
+        else if (level == 2)
         {
             StartCoroutine(ShowLevelTransition("Great job! Level 2 is starting..."));
+
+            playerTransform = GameObject.FindWithTag("Player")?.transform;
+
             GameObject newEnemies = Instantiate(enemiesParent2Prefab);
             currentenemiesParent = newEnemies.transform;
 
             GameObject newHearts = Instantiate(heartsParent2Prefab);
             currentheartsParent = newHearts.transform;
-
-
-            AssignPlayerToAllEnemies(GameObject.FindWithTag("Player").transform);
-            Count();
         }
         else if (level == 3)
         {
             StartCoroutine(ShowLevelTransition("Final Stage! Level 3 begins now. Give it your all!"));
+
+            playerTransform = GameObject.FindWithTag("Player")?.transform;
+
             GameObject newEnemies = Instantiate(enemiesParent3Prefab);
             currentenemiesParent = newEnemies.transform;
 
             GameObject newHearts = Instantiate(heartsParent3Prefab);
             currentheartsParent = newHearts.transform;
-
-            AssignPlayerToAllEnemies(GameObject.FindWithTag("Player").transform);
-            Count();
         }
+
+        if (playerTransform != null)
+        {
+            AssignPlayerToAllEnemies(playerTransform);
+        }
+
+        Count();
     }
 
     public void AssignPlayerToAllEnemies(Transform playerTransform)

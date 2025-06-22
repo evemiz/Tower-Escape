@@ -30,12 +30,22 @@ public class AI : MonoBehaviour
         }
 
         currentState = new Idle(gameObject, agent, anim, player);
-    }
 
+    }
     void Update()
     {
+        if (currentState == null)
+        {
+            if (player != null)
+            {
+                currentState = new Idle(gameObject, agent, anim, player);
+            }
+            return;
+        }
+
         currentState = currentState.Process();
     }
+
 
     public GameObject GetProjectile() => projectilePrefab;
     public Transform GetShootPoint() => fireballSpawnPoint;
@@ -57,5 +67,4 @@ public class AI : MonoBehaviour
             currentState.player = playerTransform;
         }
     }
-
 }
