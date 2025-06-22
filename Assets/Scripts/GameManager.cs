@@ -243,7 +243,7 @@ public class GameManager : MonoBehaviour
 
         if (winSound != null)
         {
-            AudioSource.PlayClipAtPoint(winSound, transform.position, volume);
+            AudioSource.PlayClipAtPoint(winSound, GameObject.FindWithTag("Player").transform.position, volume);
         }
     }
 
