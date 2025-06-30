@@ -1,16 +1,19 @@
 using UnityEngine;
 
-public class MusicPlayer : MonoBehaviour
+public class MusicManager : MonoBehaviour
 {
-    private void Awake()
+    private static MusicManager instance;
+
+    void Awake()
     {
-        int musicPlayers = FindObjectsOfType<MusicPlayer>().Length;
-        if (musicPlayers > 1)
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
         {
             Destroy(gameObject);
-            return;
         }
-
-        DontDestroyOnLoad(gameObject);
     }
 }
