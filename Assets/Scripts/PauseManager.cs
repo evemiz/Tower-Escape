@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class PauseManager : MonoBehaviour
 {
     public GameObject pauseMenuUI;
-    private bool isPaused = false;
+    public static bool isPaused = false;
     public CameraManager cameraManager;
 
     public Image menuButtonImage;
@@ -42,6 +42,8 @@ public class PauseManager : MonoBehaviour
         isPaused = false;
         pauseMenuUI.SetActive(false);
         Time.timeScale = 1f;
+        cameraManager.isCameraLocked = false;
+        menuButtonImage.sprite = normalSprite;
     }
 
     public void RestartGame()

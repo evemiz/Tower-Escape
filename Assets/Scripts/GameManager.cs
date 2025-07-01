@@ -115,7 +115,7 @@ public class GameManager : MonoBehaviour
         }
         else if (level == 2)
         {
-            StartCoroutine(ShowLevelTransition("Great job! Level 2 is starting..."));
+            StartCoroutine(ShowLevelTransition("Level 2 is starting..."));
 
             playerTransform = GameObject.FindWithTag("Player")?.transform;
 
@@ -127,7 +127,7 @@ public class GameManager : MonoBehaviour
         }
         else if (level == 3)
         {
-            StartCoroutine(ShowLevelTransition("Final Stage! Level 3 begins now. Give it your all!"));
+            StartCoroutine(ShowLevelTransition("Final Stage! Level 3 begins now"));
 
             playerTransform = GameObject.FindWithTag("Player")?.transform;
 
@@ -158,7 +158,7 @@ public class GameManager : MonoBehaviour
     }
     private IEnumerator ShowLevelTransition(string message)
     {
-        if (levelTransitionPanel != null && levelTransitionText != null)
+        if (levelTransitionPanel != null && levelTransitionText != null && level != 1)
         {
             Time.timeScale = 0f;
 
@@ -185,11 +185,15 @@ public class GameManager : MonoBehaviour
             levelTransitionPanel.SetActive(false);
 
             yield return new WaitForSecondsRealtime(0.5f);
-            if (camManager != null)
+
+            if (!PauseManager.isPaused)
             {
-                camManager.isCameraLocked = false;
+                Time.timeScale = 1f;
+                if (camManager != null)
+                {
+                    camManager.isCameraLocked = false;
+                }
             }
-            Time.timeScale = 1f;
         }
     }
 
