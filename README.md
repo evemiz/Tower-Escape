@@ -4,9 +4,7 @@
 Your mission: **Defeat all enemy guards and reclaim the castle.**  
 Lose all your health or fall into the sea, and it's game over!
 
-
-## 🎥 Demo Video
-[▶️ Watch Gameplay Video](Recordings/Movie_004.mp4)
+![Gameplay Screenshot](demo.png)
 
 
 ## 🎯 Objective
