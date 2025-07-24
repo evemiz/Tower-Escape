@@ -6,8 +6,7 @@ Lose all your health or fall into the sea, and it's game over!
 
 
 ## 🎥 Demo Video
-_Coming Soon_  
-(Embed [gameplay video](#) or GIF here)
+[▶️ Watch Gameplay Video](Recordings/Movie_004.mp4)
 
 
 ## 🎯 Objective
