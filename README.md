@@ -40,4 +40,5 @@ Enemy guards operate under **four behavior states**:
    ```bash
    git clone https://github.com/yourusername/TowerEscape.git
 2. Open the project in Unity 2022.3.5f1
-3. Press Play in the Unity Editor or build the project for your platform
+3. The first scene of the game is **MainMenu**, located in the `Assets/Scenes` folder.
+4. Press Play in the Unity Editor or build the project for your platform
